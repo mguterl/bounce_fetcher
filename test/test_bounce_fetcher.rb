@@ -13,7 +13,15 @@ class TestBounceFetcher < MiniTest::Unit::TestCase
     end
   end
 
-  class Email < Struct.new(:body, :permanent_bounce); end
+  class Email < Struct.new(:body, :permanent_bounce)
+    def delete
+      @deleted = true
+    end
+
+    def deleted?
+      @deleted
+    end
+  end
 
   class FakeExtractor
     def extract_emails(tmail)
@@ -28,7 +36,9 @@ class TestBounceFetcher < MiniTest::Unit::TestCase
   end
 
   def test_each_only_returns_emails_for_permanent_bounces
-    pop_fetcher = FakePopFetcher.new(Email.new('foo@bar.com', true), Email.new('bar@baz.com', false))
+    permanent_bounce = Email.new('foo@bar.com', true)
+    temporary_bounce = Email.new('bar@baz.com', false)
+    pop_fetcher = FakePopFetcher.new(permanent_bounce, temporary_bounce)
     extractor = FakeExtractor.new
     detector = FakeBounceDetector.new
     fetcher = BounceFetcher.new(pop_fetcher, extractor, detector)
@@ -39,6 +49,8 @@ class TestBounceFetcher < MiniTest::Unit::TestCase
     end
 
     assert_equal ['foo@bar.com'], emails
+    assert permanent_bounce.deleted?
+    assert !temporary_bounce.deleted?
   end
 
 end

@@ -5,6 +5,26 @@ module BounceProcessor
 
   class PopFetcher
 
+    class Email
+      def initialize(email)
+        @email = email
+      end
+
+      def delete
+        @email.delete
+      end
+
+      def method_missing(meth, *args, &block)
+        parsed_email.send(meth, *args, &block)
+      end
+
+      private
+
+      def parsed_email
+        @parsed_email ||= TMail::Mail.parse(@email.pop)
+      end
+    end
+
     def initialize(host, username, password)
       @host = host
       @username = username
@@ -13,8 +33,7 @@ module BounceProcessor
 
     def each
       connection.each_mail do |e|
-        yield TMail::Mail.parse(e.pop)
-        e.delete
+        yield Email.new(e)
       end
       connection.finish
     end

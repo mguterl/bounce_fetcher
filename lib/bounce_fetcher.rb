@@ -25,6 +25,7 @@ module BounceFetcher
           @extractor.extract_emails(e).each do |email|
             yield email
           end
+          e.delete
         end
       end
     end
