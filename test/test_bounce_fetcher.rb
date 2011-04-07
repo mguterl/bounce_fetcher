@@ -24,8 +24,8 @@ class TestBounceFetcher < MiniTest::Unit::TestCase
   end
 
   class FakeExtractor
-    def extract_emails(tmail)
-      [tmail.body]
+    def extract_emails(string)
+      [string]
     end
   end
 

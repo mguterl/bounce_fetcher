@@ -22,7 +22,7 @@ module BounceFetcher
     def each
       @fetcher.each do |e|
         if @detector.permanent_bounce?(e)
-          @extractor.extract_emails(e).each do |email|
+          @extractor.extract_emails(e.body).each do |email|
             yield email
           end
           e.delete
