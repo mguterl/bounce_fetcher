@@ -25,10 +25,11 @@ module BounceFetcher
       end
     end
 
-    def initialize(host, username, password)
+    def initialize(host, username, password, port = 110)
       @host = host
       @username = username
       @password = password
+      @port = port
     end
 
     def each
@@ -42,7 +43,7 @@ module BounceFetcher
 
     def connection
       if @connection.nil?
-        @connection = Net::POP3.new(@host)
+        @connection = Net::POP3.new(@host, @port)
         @connection.start(@username, @password)
       end
 

@@ -4,8 +4,8 @@ module BounceFetcher
     BounceFetcher.new(*args, &block)
   end
 
-  def self.pop3(host, username, password)
-    fetcher = PopFetcher.new(host, username, password)
+  def self.pop3(host, username, password, port = 110)
+    fetcher = PopFetcher.new(host, username, password, port)
     extractor = EmailExtractor.new
     detector = BounceDetector.new
     new(fetcher, extractor, detector)
