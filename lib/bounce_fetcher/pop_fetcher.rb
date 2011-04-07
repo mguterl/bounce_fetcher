@@ -1,6 +1,8 @@
 # lifted from the action_mailer_verp plugin:
 # http://github.com/jamesgolick/action_mailer_verp
 
+require 'net/pop'
+
 module BounceFetcher
 
   class PopFetcher
