@@ -22,5 +22,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'tmail', '~> 1.2'
   s.add_dependency 'bounce-email', '~> 0.0.1'
 
+  s.add_development_dependency 'minitest'
   s.add_development_dependency 'eventmachine'
 end
