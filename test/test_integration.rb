@@ -5,7 +5,7 @@ require 'net/smtp'
 class TestIntegration < MiniTest::Unit::TestCase
 
   def start_server
-    child_pid = fork do
+    fork do
       STDIN.reopen('/dev/null')
       STDOUT.reopen('/dev/null', 'a')
       STDERR.reopen(STDOUT)
@@ -19,8 +19,8 @@ class TestIntegration < MiniTest::Unit::TestCase
 
     mail.to      = options[:to] || 'blah@blah.com'
     mail.from    = options[:from] || 'postmaster@blah.com'
-    mail.subject = options[:subject] || 'mail delivery failed'
-    mail.body    = options[:body] || 'foo@bar.com mailbox unavailable'
+    mail.subject = options[:subject] || 'subject'
+    mail.body    = options[:body] || 'body'
     mail.date    = options[:date] || Time.now
 
     begin
@@ -33,10 +33,19 @@ class TestIntegration < MiniTest::Unit::TestCase
     end
   end
 
+  def send_permanent_bounce(options = {})
+    options = {
+      :subject => 'mail delivery failed',
+      :body => 'foo@bar.com mailbox unavailable',
+    }.merge(options)
+
+    send_email(options)
+  end
+
   def setup
     start_server
-    send_email # bounce
-    send_email(:subject => 'hi', :body => 'there') # not bounce
+    send_permanent_bounce
+    send_email
   end
 
   def test_bounce_fetcher
