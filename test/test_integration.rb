@@ -10,7 +10,7 @@ class TestIntegration < MiniTest::Unit::TestCase
       STDOUT.reopen('/dev/null', 'a')
       STDERR.reopen(STDOUT)
       Dir.chdir(File.dirname(__FILE__) + "/support/localpost")
-      system("ruby -I. localpost.rb")
+      exec("ruby -I. localpost.rb")
     end
   end
 
