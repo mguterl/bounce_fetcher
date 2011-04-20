@@ -19,13 +19,15 @@ module BounceFetcher
       @detector = detector
     end
 
-    def each
+    def each(options = {})
+      options = { :delete => true }.merge(options)
+
       @fetcher.each do |e|
         if @detector.permanent_bounce?(e)
           @extractor.extract_emails(e.body).each do |email|
             yield email
           end
-          e.delete
+          e.delete if options[:delete]
         end
       end
     end
