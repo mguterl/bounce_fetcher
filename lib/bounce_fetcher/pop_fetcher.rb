@@ -23,7 +23,15 @@ module BounceFetcher
       private
 
       def parsed_email
-        @parsed_email ||= TMail::Mail.parse(@email.pop)
+        @parsed_email ||= TMail::Mail.parse(fetch_mail)
+      end
+
+      def fetch_mail
+        @email.pop
+      rescue Timeout::Error => e
+        attempts ||= 1
+        warn "Connection timed out, retrying..."
+        retry unless attempts > 3
       end
     end
 
