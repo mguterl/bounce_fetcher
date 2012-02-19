@@ -30,7 +30,6 @@ module BounceFetcher
         @email.pop
       rescue Timeout::Error => e
         attempts ||= 1
-        puts "Connection timed out, retrying..."
         retry unless attempts > 3
       end
     end
